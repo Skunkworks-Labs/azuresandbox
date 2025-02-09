@@ -1,0 +1,44 @@
+name: Setup AzureSandbox Repository
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Create Repository Structure and Generate Files
+        run: |
+          mkdir -p azuresandbox/.github
+          mkdir -p azuresandbox/terraform-azurerm-vnet-shared
+          mkdir -p azuresandbox/terraform-azurerm-vm-mssql
+          mkdir -p azuresandbox/extras
+
+          echo "# Code of Conduct" > azuresandbox/.github/CODE_OF_CONDUCT.md
+          echo "# Contribution Guidelines" > azuresandbox/.github/CONTRIBUTING.md
+          
+          echo "# Terraform Configuration for Shared VNet" > azuresandbox/terraform-azurerm-vnet-shared/main.tf
+          echo "variable \"vnet_name\" {}" > azuresandbox/terraform-azurerm-vnet-shared/variables.tf
+          echo "output \"vnet_id\" {}" > azuresandbox/terraform-azurerm-vnet-shared/outputs.tf
+          
+          echo "# Terraform Configuration for MSSQL VM" > azuresandbox/terraform-azurerm-vm-mssql/main.tf
+          
+          echo "# Additional Scripts and Configurations" > azuresandbox/extras/.keep
+          
+          echo "# Azure Sandbox Repository\n\nThis repository contains configurations and scripts for deploying an Azure sandbox environment." > azuresandbox/README.md
+          echo "MIT License" > azuresandbox/LICENSE.md
+          echo "# Changelog\n\nAll notable changes to this project will be documented here." > azuresandbox/CHANGELOG.md
+          
+          echo "# PowerShell Script for Configuring Environment" > azuresandbox/configure-powershell.ps1
+          echo "# Shell Script for Cleaning Terraform Temporary Files" > azuresandbox/cleanterraformtemp.sh
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add .
+          git commit -m "Initial commit - Set up repository structure with content"
+          git push
